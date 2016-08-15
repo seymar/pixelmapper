@@ -1,0 +1,23 @@
+{
+  "name": "pixelmapper",
+  "version": "1.0.2",
+  "description": "Maps 2D coordinates to an array of pixels, useful for LED strip mapping",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "pixel",
+    "pixels",
+    "mapping",
+    "pixel mapping",
+    "led",
+    "led strip",
+    "ledstrip",
+    "matrix",
+    "ledmatrix",
+    "led matrix"
+  ],
+  "author": "Stijn Martens",
+  "license": "ISC"
+}
