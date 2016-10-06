@@ -14,24 +14,44 @@
    * @param {array} components - Array of components
    * @param {string} components - Output of Pixelmapper.toJSON()
    */
-  function Pixelmapper(components) {
-    this._mapping = [];
-    this._components = [];
+  class Pixelmapper {
+    constructor(components) {
+      // The pixels mapped to coordinates
+      this._mapping = [];
 
-    if(typeof components == 'string') {
-      this.fromJSON(components);
-    } else if(components instanceof Array) {
-      this._init(components);
+      // The components that were used to create the mapping, 
+      this._components = [];
+
+      if(typeof components == 'string') {
+        this.fromJSON(components);
+      } else if(components instanceof Array) {
+        this._init(components);
+      }
+
+      return this;
     }
 
-    return this;
-  }
+
+    /**
+     * Creates mapping from components and saves them in ._components
+     * @param {array} components - Array of components
+     */
+    _init(components) {
+      components.forEach(function(component) {
+        this[component.name].apply(this, component.arguments);
+      }, this);
+      
+      this._components = components;
+
+      return this;
+    }
+
     /**
      * Maps a pixel to a coordinate, saving into this._mapping
      * @param {number} x - X coordinate
      * @param {number} y - Y coordinate
      */
-    Pixelmapper.prototype.add = function(x, y) {
+    add(x, y) {
       if(this._exists(x, y))
         throw new Error('Double pixel assignment at [' + x + ', ' + y + ']');
 
@@ -41,13 +61,22 @@
     }
 
     /**
+     * Adds a number of pixels without an assigned coordinate
+     * Useful for OctoWS12811
+     * @param {number} amount - Amount of pixels
+     */
+    fillEmpty(amount) {
+      for(var i = 0; i < amount; i++) this._mapping.push(null);
+    }
+
+    /**
      * Adds a line of pixels
      * @param {number} x1 - X start coordinate
      * @param {number} x1 - Y start coordinate
      * @param {number} dx - Width
      * @param {number} dy - Height
      */
-    Pixelmapper.prototype.line = function(x1, y1, dx, dy) {
+    line(x1, y1, dx, dy) {
       this._line(x1, y1, dx, dy);
       
       this._components.push({
@@ -66,7 +95,7 @@
      * @param {number} dy - Height, can be negative
      * @param {boolean} direction - true for horizontal, false for vertical
      */
-    Pixelmapper.prototype.zigzag = function(x1, y1, dx, dy, direction) {
+    zigzag(x1, y1, dx, dy, direction) {
       var xl = Math.abs(dx);
       var yl = Math.abs(dy);
 
@@ -87,19 +116,10 @@
     }
 
     /**
-     * Adds a number of pixels without an assigned coordinate
-     * Useful for OctoWS12811
-     * @param {number} amount - Amount of pixels
-     */
-    Pixelmapper.prototype.fillEmpty = function(amount) {
-      for(var i = 0; i < amount; i++) this._mapping.push(null);
-    }
-
-    /**
-     * Returns the coordinate assigned to a pixel
+     * Gets the coordinate of a particular pixel in the 1D array
      * @param {number} i - Index of pixel in this._mapping
      */
-    Pixelmapper.prototype.map = function(i) {
+    get(i) {
       if(typeof this._mapping[i] == 'undefined')
         throw new Error('Pixel with index ' + i + ' does not exist');
 
@@ -111,7 +131,7 @@
      * @param {number} x
      * @param {number} y
      */
-    Pixelmapper.prototype.mapReverse = function(x, y) {
+    mapReverse(x, y) {
       for(var i in this._mapping) {
         if(!this._mapping[i]) continue;
         if(this._mapping[i][0] == x && this._mapping[i][1] == y)
@@ -123,7 +143,7 @@
     /**
      * Converts instance to JSON string
      */
-    Pixelmapper.prototype.toJSON = function() {
+    toJSON() {
       return JSON.stringify(this._components);
     }
 
@@ -131,26 +151,8 @@
      * Initializes instance from JSON string
      * @param {string} json - JSON string
      */
-    Pixelmapper.prototype.fromJSON = function(json) {
+    fromJSON(json) {
       return this._init(JSON.parse(json));
-    }
-
-    /**
-     * Private functions
-     */
-
-    /**
-     * Creates mapping from components and saves them in ._components
-     * @param {array} components - Array of components
-     */
-    Pixelmapper.prototype._init = function(components) {
-      components.forEach(function(component) {
-        this[component.name].apply(this, component.arguments);
-      }, this);
-      
-      this._components = components;
-
-      return this;
     }
     
     /**
@@ -161,7 +163,7 @@
      * @param {number} dx - Width
      * @param {number} dy - Height
      */
-    Pixelmapper.prototype._line = function(x1, y1, dx, dy) {
+    _line(x1, y1, dx, dy) {
       var xl = Math.abs(dx);
       var yl = Math.abs(dy);
       
@@ -180,7 +182,7 @@
      * @param {number} x - X coordinate
      * @param {number} y - Y coordinate
      */
-    Pixelmapper.prototype._exists = function(x, y) {
+    _exists(x, y) {
       for(var i in this._mapping) {
         if(!this._mapping[i]) continue;
         if(this._mapping[i][0] == x && this._mapping[i][1] == y)
@@ -188,6 +190,7 @@
       }
       return false;
     }
-
+  }
+  
   module.exports = Pixelmapper;
 })(typeof module == 'undefined' ? this['Pixelmapper'] : module);
