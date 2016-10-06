@@ -141,7 +141,7 @@
 
     /**
      * Creates mapping from components and saves them in ._components
-     * @param {array} compontents - Array of components
+     * @param {array} components - Array of components
      */
     Pixelmapper.prototype._init = function(components) {
       components.forEach(function(component) {
