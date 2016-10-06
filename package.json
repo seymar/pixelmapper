@@ -1,8 +1,8 @@
 {
   "name": "pixelmapper",
-  "version": "1.0.3",
+  "version": "1.1.7",
   "description": "Maps 2D coordinates to an array of pixels, useful for LED strip mapping",
-  "main": "index.js",
+  "main": "pixelmapper.js",
   "scripts": {
     "test": "node test.js"
   },
