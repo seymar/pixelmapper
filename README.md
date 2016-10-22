@@ -1,10 +1,10 @@
 ## Documentation
 
 ### Creating a mapping from components
-add - Adds a single pixel
-line - Adds a line of pixels
-zigzag - Adds a zigzag pattern rectangle of pixels
-fillEmpty - Adds a number of pixels without corresponding coordinate
+  add - Adds a single pixel
+  line - Adds a line of pixels
+  zigzag - Adds a zigzag pattern rectangle of pixels
+  fillEmpty - Adds a number of pixels without corresponding coordinate
 
 Example:
 ```javascript
