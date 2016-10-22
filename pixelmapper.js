@@ -96,10 +96,11 @@
     }
 
     /**
-     * Returns the coordinate assigned to a pixel
+     * Finds the coordinate assigned to a pixel
      * @param {number} i - Index of pixel in this._mapping
+     * @returns {array} Coordinate
      */
-    Pixelmapper.prototype.map = function(i) {
+    Pixelmapper.prototype.getCoordinate = function(i) {
       if(typeof this._mapping[i] == 'undefined')
         throw new Error('Pixel with index ' + i + ' does not exist');
 
@@ -110,8 +111,9 @@
      * Finds the pixel with given coordinate
      * @param {number} x
      * @param {number} y
+     * @returns {number} Pixel
      */
-    Pixelmapper.prototype.mapReverse = function(x, y) {
+    Pixelmapper.prototype.getPixel = function(x, y) {
       for(var i in this._mapping) {
         if(!this._mapping[i]) continue;
         if(this._mapping[i][0] == x && this._mapping[i][1] == y)
